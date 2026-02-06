@@ -1,0 +1,5 @@
+package com.hungnv.twitter_clone_backend.config;
+
+public class AppConfig {
+
+}
