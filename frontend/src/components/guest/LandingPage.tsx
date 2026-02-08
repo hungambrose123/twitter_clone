@@ -1,8 +1,7 @@
 import { Grid } from '@mui/material'
-import React from 'react'
 import Navigation from '../navigation/Navigation'
-import HomeSection from '../home-section/HomeSection'
 import RightPart from '../right-part/RightPart'
+import { Outlet, Route, Routes } from 'react-router'
 
 const LandingPage = () => {
   return (
@@ -11,7 +10,7 @@ const LandingPage = () => {
             <Navigation />
         </Grid>
         <Grid size={{ xs: 12, lg: 6 }} className="w-full lg-block relative px-5 lg:px-9">
-            <HomeSection />
+            <Outlet />
         </Grid>
         <Grid size={{ xs: 0, lg: 3 }} className="w-full lg-block relative">
             <RightPart />
