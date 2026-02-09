@@ -7,6 +7,7 @@ import Profile from "../components/registered-user/Profile/Profile";
 import ErrorPage from "../components/error/ErrorPage";
 import AuthenticationLayout from "../components/authentication/AuthenticationLayout";
 import RegisterPage from "../components/authentication/RegisterPage";
+import TweetDetail from "../components/tweet-detail/TweetDetail";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,13 @@ export const router = createBrowserRouter([
           return { username: params };
         },
         Component: Profile,
+      },
+      {
+        path: "tweet/:tweetId",
+        loader: async ({ params }) => {
+          return { tweetId: params };
+        },
+        Component: TweetDetail,
       },
     ],
     ErrorBoundary: ErrorPage,

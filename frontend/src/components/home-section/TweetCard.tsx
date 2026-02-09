@@ -85,7 +85,7 @@ const TweetCard = () => {
             </div>
           </div>
           <div className='mt-2'>
-            <div className='cursor-pointer'>
+            <div className='cursor-pointer' onClick={() => navigate("/tweet/5")}>
                 <p className='mb-2 p-0'>My twitter clone - a project creatd using react and spring boot</p>
                 <img className='w-[28rem] border border-gray-400  p-5 rounded-md' src='https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg' alt='tweet image' />
             </div>
