@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { Button } from '@mui/material';
 import { MoreHoriz } from '@mui/icons-material';
+import SubscriptionModal from '../subscription/SubscriptionModal';
 
 const RightPart = () => {
+  const [openSubscriptionModal, setOpenSubscriptionModal] = useState(false);
+      const handleOpenSubscriptionModal = () => setOpenSubscriptionModal(true);
+      const handleClose = () => setOpenSubscriptionModal(false);
+
     const handleChangeTheme = () => {
         console.log("change theme")
     }
@@ -26,7 +31,7 @@ const RightPart = () => {
       <section className='my-5'>
         <h1 className='text-xl font-bold'>Get verified</h1>
         <h1>Subscribe to unlock new features</h1>
-        <Button sx={{padding: "10px", paddingX: "20px", borderRadius: "25px"}} variant='contained'>Get verified</Button>
+        <Button sx={{padding: "10px", paddingX: "20px", borderRadius: "25px"}} variant='contained' onClick={handleOpenSubscriptionModal}>Get verified</Button>
       </section>
       <section className='mt-7 space-y-5'>
         <h1 className='font-bold text-xl py-1'>What's happening</h1>
@@ -43,6 +48,9 @@ const RightPart = () => {
             </div>
             <MoreHoriz />
         </div>
+      </section>
+      <section>
+        <SubscriptionModal open={openSubscriptionModal} handleClose={handleClose}/>
       </section>
     </div>
   );

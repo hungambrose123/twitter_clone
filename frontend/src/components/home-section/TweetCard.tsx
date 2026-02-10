@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import RepeatIcon from '@mui/icons-material/Repeat';
 import { Avatar, Button, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router';
@@ -9,22 +9,20 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import { FavoriteOutlined } from '@mui/icons-material';
+import ReplyModal from './ReplyModal';
 
 const TweetCard = () => {
     const navigate = useNavigate();
+    const [openReplyModal, setOpenReplyModal] = useState(false);
+        const handleOpenReplyModal = () => setOpenReplyModal(true);
+        const handleClose = () => setOpenReplyModal(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
       const open = Boolean(anchorEl);
       const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
       };
-      const handleClose = () => {
-        setAnchorEl(null);
-      };
       const handleDeleteTweet = () => {
         console.log("delete tweet");
-      }
-      const handleOpenReplyModal = () => {
-        console.log("open modal")
       }
       const handleCreateRetweet = () => {
         console.log("create retweet")
@@ -34,7 +32,7 @@ const TweetCard = () => {
       }
 
   return (
-    <div>
+    <>
       <div className="flex items-center font-semibold text-gray-700 py-2">
         <RepeatIcon />
         <p>You retweet</p>
@@ -128,7 +126,10 @@ const TweetCard = () => {
           </div>
         </div>
       </div>
-    </div>
+      <section>
+        <ReplyModal open={openReplyModal} handleClose={handleClose} />
+      </section>
+    </>
   );
 }
 
