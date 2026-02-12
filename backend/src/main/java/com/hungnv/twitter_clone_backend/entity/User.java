@@ -1,16 +1,17 @@
 package com.hungnv.twitter_clone_backend.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Data
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,6 +25,28 @@ public class User {
 	private String email;
 	private LocalDate dob;
 	private String phoneNumber;
+	private String avatarImage;
+	private String backgroundImage;
+
+	@CreatedDate
+	@Column(updatable = false)
 	private LocalDate createdDate;
+
+
+	// relations
+	@OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
+	private List<Tweet> tweets;
+
+	@OneToMany(mappedBy = "receiverId", cascade = CascadeType.ALL)
+	private List<Notification> notifications;
+
+	@OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+	private List<Follow> followingList;
+
+	@OneToMany(mappedBy = "followed", cascade = CascadeType.ALL)
+	private List<Follow> followedlist;
+
+	@OneToMany(mappedBy = "bookmarkedBy", cascade = CascadeType.ALL)
+	private List<Bookmark> bookmarks;
 
 }

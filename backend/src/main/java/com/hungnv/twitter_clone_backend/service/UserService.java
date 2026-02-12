@@ -1,61 +1,54 @@
 package com.hungnv.twitter_clone_backend.service;
 
 import com.hungnv.twitter_clone_backend.dto.request.UserUpdateRequest;
-import com.hungnv.twitter_clone_backend.exception.AppException;
-import com.hungnv.twitter_clone_backend.exception.ErrorCode;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hungnv.twitter_clone_backend.dto.response.UserResponse;
+import com.hungnv.twitter_clone_backend.mapper.UserMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.hungnv.twitter_clone_backend.dto.request.UserCreationRequest;
 import com.hungnv.twitter_clone_backend.entity.User;
 import com.hungnv.twitter_clone_backend.repository.UserRepository;
 
-import javax.management.RuntimeErrorException;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService {
-	@Autowired
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final UserMapper userMapper;
 
-	public User createUser(UserCreationRequest request) {
-		if(userRepository.existsByEmail(request.getEmail())){
-			throw new AppException(ErrorCode.EMAIL_EXISTED);
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+    }
+
+
+    public UserResponse createUser(UserCreationRequest request) {
+		if (userRepository.existsByEmail(request.getEmail())) {
+			throw new RuntimeException("Email is already taken");
 		}
-
-		User user = new User();
-		user.setUsername(request.getUsername());
-		user.setFirstName(null);
-		user.setLastName(null);
-		user.setPassword(request.getPassword());
-		user.setEmail(request.getEmail());
-		user.setDob(null);
-		user.setPhoneNumber(null);
-		user.setCreatedDate(LocalDate.now());
-
-		return userRepository.save(user);
+		User user = userMapper.toUser(request);
+		user.setPassword(passwordEncoder.encode(request.getPassword()));
+		return userMapper.toUserResponse(userRepository.save(user));
 	}
 
-	public List<User> getUsers(){
-		return userRepository.findAll();
+	public List<UserResponse> getUsers(){
+		return userMapper.toUserResponseList(userRepository.findAll());
 	}
 
-	public User getUser(String userId){
-		return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found!"));
+	public UserResponse getUser(String userId){
+		return userMapper.toUserResponse(userRepository
+				.findById(userId)
+				.orElseThrow(() -> new RuntimeException("User not found!")));
 	}
 
-	public User updateUser(String userId, UserUpdateRequest request){
-		User user = getUser(userId);
-		user.setFirstName(request.getFirstName());
-		user.setLastName(request.getLastName());
-		user.setUsername(request.getUsername());
-		user.setPassword(request.getPassword());
-		user.setPhoneNumber(request.getPhoneNumber());
-		user.setDob(request.getDob());
-		user.setEmail(request.getEmail());
-		return userRepository.save(user);
-	}
+//	public UserResponse updateUser(String userId, UserUpdateRequest request){
+//		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found!")));
+//		user.setUsername(request.getUsername());
+//		return user;
+//	}
 
 	public void deleteUser(String userId){
 		userRepository.deleteById(userId);

@@ -2,16 +2,16 @@ package com.hungnv.twitter_clone_backend.dto.request;
 
 import java.time.LocalDate;
 
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserCreationRequest {
-	private String username;
-	private String password;
-	private String firstName;
-	private String lastName;
-	private String email;
-	private LocalDate dob;
-	private String phoneNumber;
-	private LocalDate createdDate;
+	String username;
+	String password;
+	String email;
 }

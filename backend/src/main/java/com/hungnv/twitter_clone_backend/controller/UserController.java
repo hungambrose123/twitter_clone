@@ -1,50 +1,54 @@
 package com.hungnv.twitter_clone_backend.controller;
 
-import com.hungnv.twitter_clone_backend.dto.request.ApiResponse;
 import com.hungnv.twitter_clone_backend.dto.request.UserCreationRequest;
 import com.hungnv.twitter_clone_backend.dto.request.UserUpdateRequest;
+import com.hungnv.twitter_clone_backend.dto.response.UserResponse;
 import com.hungnv.twitter_clone_backend.entity.User;
 import com.hungnv.twitter_clone_backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/api/users")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping()
-    ApiResponse<User> createUser(@RequestBody UserCreationRequest request){
-        ApiResponse<User> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(userService.createUser(request));
-        apiResponse.setCode(200);
-        apiResponse.setMessage("Create user successful!");
-        return apiResponse;
+    UserResponse createUser(@Valid @RequestBody UserCreationRequest request){
+        return userService.createUser(request);
     }
 
     @GetMapping()
-    List<User> getUser(){
+    List<UserResponse> getUsers(){
         return userService.getUsers();
     }
 
     @GetMapping("{userId}")
-    User getUser(@PathVariable String userId ){
+    UserResponse getUser(@PathVariable String userId ){
         return userService.getUser(userId);
     }
 
-    @PutMapping("{userId}")
-    User updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request){
-        return userService.updateUser(userId, request);
-    }
+//    @PutMapping("{userId}")
+//    User updateUser(@PathVariable String userId, @RequestBody UserUpdateRequest request){
+//        return userService.updateUser(userId, request);
+//    }
 
     @DeleteMapping("{userId}")
     String  deleteUser(@PathVariable String userId){
-        userService.deleteUser(userId);
-        return "User " +userId+" has been deleted";
+        UserResponse userResponse = getUser(userId);
+        if(!userResponse.getEmail().isEmpty()){
+            userService.deleteUser(userId);
+            return "User " +userId+" has been deleted";
+        }
+        return "User not found";
     }
 
 }
